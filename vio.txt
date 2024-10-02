@@ -1,0 +1,176 @@
+create database vio;
+-- vio (venda de ingressos online)
+
+use vio;
+
+create table usuario (
+    id_usuario int auto_increment primary key,
+    nome varchar(100) not null,
+    email varchar(100) not null unique,
+    senha varchar(50) not null,
+    telefone char(11) not null
+);
+
+insert into usuario (nome, email, senha, telefone) values
+	('Vinicius Fogaça', 'fogaca@example.com', 'senha123', '16123456789'),
+	('Maria Júlia', 'mj@example.com', 'senha123', '16888888888'),
+	('Maria Clara', 'mc@example.com', 'senha123', '16999999999'),
+	('Lívia Maria', 'lm@example.com', 'senha123', '16999998888'),
+	('João Alexandre', 'joaoa@example.com', 'senha123', '16888889999'),
+	('Guilherme Guimarães', 'guig@example.com', 'senha123', '16999997777'),
+	('Clara da Silva', 'cs@example.com', 'senha123', '16999996666'),
+	('Leonardo Pedroso', 'lp@example.com', 'senha123', '16888886666'),
+	('Gustavo Prior', 'gugap@example.com', 'senha123', '16999993333'),
+	('Pedro Paulo', 'pp@example.com', 'senha123', '16888881111');		
+	
+create table organizador (
+	id_organizador int auto_increment primary key,
+	nome varchar(100) not null,
+	email varchar(100) not null unique,
+	senha varchar(50) not null,
+	telefone char(11) not null
+);
+
+insert into organizador (nome, email, senha, telefone) values
+('João Silva', 'joao.silva@example.com', 'senha123', '11987654321'),
+('Maria Oliveira', 'maria.oliveira@example.com', 'senha456', '11923456789'),
+('Carlos Pereira', 'carlos.pereira@example.com', 'senha789', '11876543210'),
+('Ana Santos', 'ana.santos@example.com', 'senha101', '11765432109'),
+('Pedro Almeida', 'pedro.almeida@example.com', 'senha202', '11654321098'),
+('Juliana Costa', 'juliana.costa@example.com', 'senha303', '11543210987'),
+('Ricardo Lima', 'ricardo.lima@example.com', 'senha404', '11432109876'),
+('Patrícia Rocha', 'patricia.rocha@example.com', 'senha505', '11321098765'),
+('Fábio Martins', 'fabio.martins@example.com', 'senha606', '11210987654'),
+('Fernanda Lima', 'fernanda.lima@example.com', 'senha707', '11109876543'),
+('Roberto Campos', 'roberto.campos@example.com', 'senha808', '11098765432');
+
+-- Entre 5 e 7
+select * from usuario where id_usuario between 5 and 7;
+
+-- Tudo menos entre 5 e 7
+select * from usuario where id_usuario not between 5 and 7;
+
+-- Ou 5 ou 7
+select * from usuario where id_usuario in (5,7);
+
+-- Tudo menos 5 ou 7
+select * from usuario where id_usuario not in (5,7);
+
+-- Somente campos null
+select * from usuario where telefone is null;
+
+-- Somente campos not null
+select * from usuario where telefone is not null;
+
+-- Selecionar strings que "parecem"
+select * from usuario where nome like "maria clara";
+
+-- Selecionar strings que acabam em e
+select * from usuario where nome like '%e';
+
+-- Selecionar strings que acabam em e e que começam e n 
+select * from usuario where nome like "n%" and nome like "%e";
+
+-- Selecionar strings que contém ra
+select * from usuario where nome like "%ra%";
+
+show table status like "usuario";
+
+show full columns from usuario;
+
+-- Selecionar strings que contém 6 na segunda casa/posição
+select * from usuario where telefone like "_6%";
+
+-- Selecionar strings que contém 1 na terceira casa/posição
+select * from usuario where telefone like "__1%";
+
+-- 
+select * from usuario where telefone like "%8_";
+
+-- 
+select * from usuario where telefone like "%_5_%";
+
+-- Erro - coluna nome é ambiguo.
+select nome, nome from usuario, organizador;
+
+-- seleciona os nomes definindo aliases aos nomes divergentes
+select u.nome as usuario_nome, o.nome as organizador_nome from usuario u, organizador o;
+
+-- seleciona os nomes sem definir aliases aos nomes divergentes
+select usuario.nome as usuario_nome, organizador.nome as organizador_nome from usuario, organizador;
+
+-- Ordenar os resultados pela ordem crescente dos nomes
+select * from usuario order by nome asc;
+
+-- Ordenar os resultados pela ordem das padrão(asc) dos nomes
+select * from usuario order by nome ;
+
+-- Ordenar os resultados pela ordem crescente dos nomes
+select * from usuario order by id_usuario desc;
+
+-- Ordenar os resultados pela ordem das padrão(asc) dos nomes
+select * from organizador order by id_organizador;
+
+-- Selecionar todos os telefones e a quantidade de vezes que cada um repete (count())
+select telefone, count(*) as total_usuarios 
+from usuario 
+group by telefone;
+
+insert into usuario ( nome, email, telefone, senha)
+	values("Adriano Cassiano", "adriano@gmail.com", "16888881111", "senha404");
+
+select avg(length(telefone)) as media_comp_tel from organizador;
+
+select telefone, count(*) as total_usu
+	from usuario
+	group by telefone
+	having count(*) > 1;
+
+-- update nome_da_tabela
+--	set coluna1 = valor1, colunaN = valorN
+-- 	where condição;
+
+
+update usuario
+	set telefone= "16999990000"
+	where email = "fogaca@example.com";
+
+-- Perigo, trocar todas as senhas de organizadores
+update organizador
+	set senha = "nova_senha";
+
+-- delete from nome da tabela
+-- 	where condição;
+
+-- 
+delete from organizador
+	where email = "pedro.almeida@example.com";
+
+delete from usuario
+	where telefone like "1688%";
+
+update organizador
+	set senha = "senha_345"
+	where email in ("joao.silva@example.com", 
+	"ana.santos@example.com", 
+	"pedro.almeisa@example.com");
+
+delete from usuario 
+	where id_usuario between 3 and 7;
+
+delete from organizador
+	where telefone like "1109%";
+
+update usuario 
+	set telefone = "16000000000"
+	where telefone is null;
+
+delete from usuario
+	where id_usuario in (2,4,6);
+
+update organizador
+	set senha = "nso"
+	where nome = "Fábio Martins" and email = 'fabio.martins@example.com';
+
+delete from usuario
+	where nome = 'Pedro Paulo' and telefone = "16888881111";
